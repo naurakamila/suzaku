@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <link rel="icon" type="image/x-icon" href="logo-nobg.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SUZAKU 朱雀 | Roblox Dueling Grounds</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Noto+Serif+JP:wght@700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pitchBlack: '#0A060D',
+                        crimsonRed: '#FF2A5F',
+                        electricMagenta: '#D41C8C',
+                        violetPurple: '#8C22E6',
+                        darkViolet: '#1D082A',
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif'],
+                        kanji: ['Noto Serif JP', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Dynamic Scaling for All Displays (including 32" Monitors) */
+        :root {
+            font-size: 16px;
+        }
+
+        /* Large Screen & Ultra-wide/4K Monitor Adjustments (32-inch+) */
+        @media (min-width: 1920px) {
+            :root {
+                font-size: 18px;
+            }
+        }
+        @media (min-width: 2560px) {
+            :root {
+                font-size: 22px;
+            }
+        }
+
+        /* Fluid Typography */
+        .text-hero-title {
+            font-size: clamp(2.5rem, 6vw, 6.5rem);
+        }
+        .text-hero-sub {
+            font-size: clamp(1rem, 2vw, 2.2rem);
+        }
+
+        /* Hide default cursor on desktop */
+        @media (min-width: 768px) {
+            body, button, a, input, select { cursor: none !important; }
+        }
+
+        /* Custom Neon Cursor */
+        .custom-cursor {
+            pointer-events: none;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 9999;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        #cursor-dot {
+            width: 8px; height: 8px;
+            background: #FF2A5F;
+            box-shadow: 0 0 12px #FF2A5F;
+        }
+        #cursor-ring {
+            width: 36px; height: 36px;
+            border: 1.5px solid rgba(212, 28, 140, 0.6);
+            box-shadow: 0 0 15px rgba(212, 28, 140, 0.3);
+            transition: transform 0.15s ease-out, width 0.2s, height 0.2s;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0A060D; }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #FF2A5F, #8C22E6);
+            border-radius: 4px;
+        }
+        
+        body {
+            background-color: #0A060D;
+            color: #F1F5F9;
+            overflow-x: hidden;
+            font-family: 'Rajdhani', sans-serif;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Global Adaptive Container */
+        .site-container {
+            width: 92%;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Text Gradients & Glows */
+        .text-gradient-crimson {
+            background: linear-gradient(135deg, #FF2A5F 0%, #D41C8C 50%, #8C22E6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-glow-red { text-shadow: 0 0 25px rgba(255, 42, 95, 0.75); }
+        .text-glow-magenta { text-shadow: 0 0 25px rgba(212, 28, 140, 0.8); }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(18, 9, 26, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 42, 95, 0.22);
+            box-shadow: 0 10px 35px 0 rgba(0, 0, 0, 0.8);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(212, 28, 140, 0.65);
+            box-shadow: 0 12px 40px 0 rgba(255, 42, 95, 0.3);
+        }
+
+        /* Cyberpunk Button */
+        .btn-cyber {
+            position: relative;
+            background: linear-gradient(45deg, #FF2A5F, #D41C8C);
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            transition: all 0.3s ease;
+        }
+        .btn-cyber::before {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px; right: 2px; bottom: 2px;
+            background: #0A060D;
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            z-index: 1;
+            transition: background 0.3s ease;
+        }
+        .btn-cyber:hover::before { background: transparent; }
+        .btn-cyber span { position: relative; z-index: 2; }
+
+        /* Scroll Reveal Utility */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 3D Tilt */
+        .tilt-card {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .scroll-parallax {
+            will-change: transform;
+        }
+
+        /* Responsive Auto-Fit Grid for Roster Cards */
+        .responsive-roster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+        /* Container 3D Perspective */
+.flip-card-container {
+    perspective: 1000px;
+}
+
+/* Card Inner Object */
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+}
+
+/* Trigger animasi saat di-hover */
+.flip-card-container:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+/* Tampilan Sisi Depan dan Belakang */
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 1.5rem; /* rounded-3xl */
+    overflow: hidden;
+}
+
+/* Sisi Depan */
+.flip-card-front {
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+/* Sisi Belakang (Rotasi 180deg agar pas saat berputar) */
+.flip-card-back {
+    transform: rotateY(180deg);
+}
+    </style>
+</head>
+<body class="antialiased selection:bg-crimsonRed selection:text-white">
+
+    <!-- Custom Neon Cursors -->
+    <div id="cursor-dot" class="custom-cursor hidden md:block"></div>
+    <div id="cursor-ring" class="custom-cursor hidden md:block"></div>
+
+    <!-- Embers Canvas Background -->
+    <canvas id="emberCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 px-4 sm:px-8 py-4" id="navbar">
+        <div class="site-container glass-card rounded-2xl px-6 py-3 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group interactive-el">
+                <div>
+                    <img src="logo-nobg.png" alt="" class="w-10 h-10 rounded-xl items-center justify-center font-kanji text-xl font-bold text-white">
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-orbitron text-xl font-black tracking-widest text-white group-hover:text-crimsonRed transition-colors">SUZAKU</span>
+                    <span class="text-[9px] font-orbitron tracking-[0.35em] text-electricMagenta">DUELING GROUNDS</span>
+                </div>
+            </a>
+
+            <!-- Desktop Links -->
+            <nav class="hidden md:flex items-center gap-8 font-orbitron text-xs tracking-widest font-bold">
+                <a href="#about" class="text-gray-300 hover:text-crimsonRed transition-colors py-1 interactive-el">ABOUT</a>
+                <a href="#divisions" class="text-gray-300 hover:text-crimsonRed transition-colors py-1 interactive-el">DIVISIONS</a>
+                <a href="#stats" class="text-gray-300 hover:text-crimsonRed transition-colors py-1 interactive-el">STATS</a>
+                <a href="member.html" class="text-gray-300 hover:text-crimsonRed transition-colors py-1 interactive-el">MEMBER</a>
+            </nav>
+
+            <a href="https://www.tiktok.com/@suzaku.clan?_r=1&_t=ZS-9AyyuCW6LQO" class="btn-cyber px-5 py-2.5 font-orbitron text-xs font-bold tracking-widest uppercase text-white shadow-lg shadow-crimsonRed/30 hidden sm:inline-block interactive-el">
+                <span>JOIN US</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- SECTION 1: HERO PARALLAX -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden" id="hero">
+        
+        <!-- Background Parallax Layers -->
+        <div class="scroll-parallax absolute top-1/4 left-1/2 -translate-x-1/2 w-[40vw] max-w-[700px] aspect-square rounded-full from-crimsonRed/25 via-electricMagenta/15 to-transparent blur-[140px] pointer-events-none" data-speed="0.12"></div>
+
+        <div class="scroll-parallax absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-40 max-w-[800px] mx-auto" data-speed="-0.22">
+            <img src="logo1.png" alt="" class="w-full h-auto max-h-[70vh] object-contain">
+        </div>
+
+        <!-- Hero Content -->
+        <div class="relative z-10 site-container text-center">
+            
+            <h1 class="font-orbitron font-black text-glow-red text-hero-title tracking-wider uppercase mb-4 text-white">
+                SUZAKU <span class="font-kanji text-crimsonRed text-glow-red inline-block">朱雀</span>
+            </h1>
+
+            <p class="font-orbitron text-hero-sub text-transparent bg-clip-text bg-gradient-to-r from-white via-electricMagenta to-crimsonRed font-bold tracking-widest mb-8 uppercase">
+                "Rise from the Ashes, Dominate the Field."
+            </p>
+
+            <p class="max-w-3xl mx-auto font-rajdhani text-gray-300 text-lg sm:text-xl mb-10 leading-relaxed font-semibold">
+                An unstoppable superpower in Roblox Dueling Grounds. Master precise sword techniques, counter-combos, and conquer the battlefield under the banner of the Vermilion Bird.
+            </p>
+
+        </div>
+        <br><br>
+        <a href="#about" id="scrollBtn" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-400 hover:text-crimsonRed transition-colors z-20 interactive-el" style="cursor: pointer;">
+    <span class="text-[10px] font-orbitron tracking-widest uppercase">Scroll Down</span>
+    <i class="fa-solid fa-chevron-down animate-bounce text-sm"></i>
+</a>
+
+<!-- Script untuk Auto-Scroll & Interupsi -->
+
+    </section>
+
+    <!-- SECTION 2: ABOUT / LORE -->
+    <section class="relative py-32 site-container z-10" id="about">
+        <div class="grid grid-cols-1 md:grid-cols-2 items-center">
+            
+            <div class="relative reveal-on-scroll">
+              
+                <div class="scroll-parallax relative    max-w-md lg:max-w-lg mx-auto rounded-3xl " data-speed="0.06">
+                    <hr style="color: #F1F5F9;">
+                    <div class="text-center">
+                        
+                        <video width="940" height="660" controls>
+                            <source src="Draft1_Suzaku.mp4" type="video/mp4">
+                        </video>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-start reveal-on-scroll">
+                <div class="inline-flex items-center gap-2 text-crimsonRed font-orbitron text-xs font-bold tracking-widest uppercase mb-3">
+                    <i class="fa-solid fa-fire-flame-curved"></i> Clan Introduction
+                </div>
+                <span class="font-orbitron font-black text-4xl sm:text-4xl lg:text-3xl text-white mb-6 ">
+                    WHAT IS <br><h2 class="text-gradient-crimson lg:text-5xl">SUZAKU?</h2>
+                </span>
+                
+                <p class="font-rajdhani text-justify text-gray-300 text-lg sm:text-xl leading-relaxed mb-6 font-semibold">
+                    Inspired by Suzaku (朱雀)—the mythological Guardian of the South—Dueling Grounds's clan forged for players who fight with precision, agility, and absolute skill. We embody the spirit of rebirth, fierce competition, and relentless strength on the battlefield.
+
+                </p>
+
+                <p class="font-rajdhani text-justify text-gray-400 text-base sm:text-lg leading-relaxed mb-8">
+                    We focus on continuous mechanical improvement, tactical coordination, and high-level gameplay. Whether you are aiming to dominate the leaderboards or grow alongside a dedicated group of warriors, Suzaku provides the ultimate home to refine your craft and rise above.
+                    Our core values are <b>Precision, Discipline, Brotherhood, and Resilience.</b>
+                </p>
+
+                <div class="grid grid-cols-3 gap-4 w-full">
+                    <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-crimsonRed">
+                        <i class="fa-solid fa-crosshairs text-crimsonRed text-xl mb-1"></i>
+                        <div class="font-orbitron font-bold text-white text-xs">PRECISION</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-electricMagenta">
+                        <i class="fa-solid fa-shield-halved text-electricMagenta text-xl mb-1"></i>
+                        <div class="font-orbitron font-bold text-white text-xs">AGILITY</div>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl text-center border-t-2 border-t-violetPurple">
+                        <i class="fa-solid fa-crown text-violetPurple text-xl mb-1"></i>
+                        <div class="font-orbitron font-bold text-white text-xs">SKILLS</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION: LEADERSHIP SHOWCASE (KETUA & WAKIL KETUA) -->
+    <!-- SECTION: LEADERSHIP SHOWCASE (WITH 3D FLIP CARDS) -->
+    <section class="relative py-24 site-container z-10" id="leadership">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal-on-scroll">
+            <div class="inline-flex items-center gap-2 text-crimsonRed font-orbitron text-xs font-bold tracking-widest uppercase mb-3">
+                <i class="fa-solid fa-chess-king"></i> Supreme Command
+            </div>
+            <h2 class="font-orbitron font-black text-4xl sm:text-5xl text-white tracking-wider mb-4">
+                CLAN'S <span class="text-gradient-crimson">LEADER & WEB DEVELOPER</span>
+            </h2>
+            <p class="font-rajdhani text-gray-400 text-lg sm:text-xl font-semibold">
+                The supreme leaders of the Suzaku Clan, who direct and manage the clan. Meanwhile, the web developer creates and develops Suzaku's website. 
+        </div>
+
+        <!-- Leader Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl mx-auto">
+            
+            <!-- KETUA CLAN (FLIP CARD) -->
+            
+           <div class="flip-card-container aspect-[3/4] reveal-on-scroll">
+                <div class="flip-card-inner">
+                    
+                    <!-- SISI DEPAN -->
+                    <div class="flip-card-front border-2 border-electricMagenta/50 shadow-2xl flex flex-col justify-between bg-pitchBlack">
+                        <img src="bushi/shiro-leader.png" alt="Co-Leader" class="absolute inset-0 w-full h-full object-cover object-center" loading="lazy">
+
+                        <div class="relative z-10 p-5 flex justify-between items-start pointer-events-none">
+                            
+                            <span class="px-3.5 mx-auto py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-electricMagenta text-electricMagenta bg-electricMagenta/20 text-[11px] font-orbitron font-bold tracking-widest uppercase shadow-lg shadow-electricMagenta/30">
+                                CO-LEADER
+                            </span>
+                        </div>
+
+                        <div class="relative z-10 p-6 pt-20 bg-gradient-to-t from-black via-black/85 to-transparent flex flex-col items-center text-center">
+                            <h3 class="font-orbitron font-black text-3xl text-white tracking-wider       drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+                                Shiro
+                            </h3>
+                            <span class="font-orbitron text-xs font-semibold tracking-[0.25em] text-electricMagenta uppercase mt-1 mb-3">
+                                Bushi Division
+                            </span>
+                            
+                        </div>
+                    </div>
+
+                    <!-- SISI BELAKANG (DESAIN SAMA) -->
+                    <div class="flip-card-back border-2 border-electricMagenta shadow-2xl flex flex-col justify-between bg-pitchBlack">
+                        <img src="bushi/shiro.png" alt="Co-Leader" class="absolute inset-0 w-full h-full object-cover object-center" loading="lazy">
+
+                        <div class="relative z-10 p-5 flex justify-between items-start pointer-events-none">
+                            
+                            <span class="px-3.5 mx-auto py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-electricMagenta text-electricMagenta bg-electricMagenta/20 text-[11px] font-orbitron font-bold tracking-widest uppercase shadow-lg shadow-electricMagenta/30">
+                                CO-LEADER 
+                            </span>
+                        </div>
+
+                        <div class="relative z-10 p-6 pt-20 bg-gradient-to-t from-black via-black/85 to-transparent flex flex-col items-center text-center">
+                            <h3 class="font-orbitron font-black text-3xl text-electricMagenta tracking-wider  drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+                                Shiro
+                            </h3>
+                            <span class="font-orbitron text-xs font-semibold tracking-[0.25em] text-electricMagenta uppercase mt-1 mb-3">
+                                Bushi Division
+                            </span>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="flip-card-container aspect-[3/4] reveal-on-scroll">
+                <div class="flip-card-inner">
+                    
+                    <!-- SISI DEPAN -->
+                    <div class="flip-card-front border-2 border-crimsonRed/50 shadow-2xl flex flex-col justify-between bg-pitchBlack">
+                        <img src="shogun/sora-leader.png" alt="Clan Leader" class="absolute inset-0 w-full h-full object-cover object-center" loading="lazy">
+
+                        <div class="relative z-10 p-5 flex justify-between items-start pointer-events-none">
+                    
+                            <span class="px-3.5 mx-auto py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-crimsonRed text-crimsonRed bg-crimsonRed/20 text-[11px] font-orbitron font-bold tracking-widest uppercase shadow-lg shadow-crimsonRed/30">
+                                LEADER 
+                            </span>
+                        </div>
+
+                        <div class="relative z-10 p-6 pt-20 bg-gradient-to-t from-black via-black/85 to-transparent flex flex-col items-center text-center">
+                            <h3 class="font-orbitron font-black text-3xl text-white tracking-wider drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+                                ShinSora
+                            </h3>
+                            <span class="font-orbitron text-xs font-semibold tracking-[0.25em] text-electricMagenta uppercase mt-1 mb-3">
+                                Shogun Division
+                            </span>
+                            
+                        </div>
+                    </div>
+
+                    <!-- SISI BELAKANG (DESAIN SAMA) -->
+                    <div class="flip-card-back border-2 border-crimsonRed shadow-2xl flex flex-col justify-between bg-pitchBlack">
+                        <img src="shogun/sora.png" alt="Clan Leader" class="absolute inset-0 w-full h-full object-cover object-center" loading="lazy">
+
+                        <div class="relative z-10 p-5 flex justify-between items-start pointer-events-none">
+                            
+                            <span class="px-3.5 mx-auto py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-crimsonRed text-crimsonRed bg-crimsonRed/20 text-[11px] font-orbitron font-bold tracking-widest uppercase shadow-lg shadow-crimsonRed/30">
+                                LEADER 
+                            </span>
+                        </div>
+
+                        <div class="relative z-10 p-6 pt-20 bg-gradient-to-t from-black via-black/85 to-transparent flex flex-col items-center text-center">
+                            <h3 class="font-orbitron font-black text-3xl text-crimsonRed tracking-wider drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+                                ShinSora
+                            </h3>
+                            <span class="font-orbitron text-xs font-semibold tracking-[0.25em] text-electricMagenta uppercase mt-1 mb-3">
+                                Shogun Division
+                            </span>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="flip-card-container aspect-[3/4] reveal-on-scroll">
+                <div class="flip-card-inner">
+                    
+                    <!-- SISI DEPAN -->
+                    <div class="flip-card-front border-2 border-electricMagenta/50 shadow-2xl flex flex-col justify-between bg-pitchBlack">
+                        <img src="queen/ani-leader.png" alt="Co-Leader" class="absolute inset-0 w-full h-full object-cover object-center" loading="lazy">
+
+                        <div class="relative z-10 p-5 flex justify-between items-start pointer-events-none">
+                            
+                            <span class="px-3.5 mx-auto py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-electricMagenta text-electricMagenta bg-electricMagenta/20 text-[11px] font-orbitron font-bold tracking-widest uppercase shadow-lg shadow-electricMagenta/30">
+                                CO-LEADER
+                            </span>
+                        </div>
+
+                        <div class="relative z-10 p-6 pt-20 bg-gradient-to-t from-black via-black/85 to-transparent flex flex-col items-center text-center">
+                            <h3 class="font-orbitron font-black text-3xl text-white tracking-wider  drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+                                Anichwan
+                            </h3>
+                            <span class="font-orbitron text-xs font-semibold tracking-[0.25em] text-electricMagenta uppercase mt-1 mb-3">
+                                Queen Division
+                            </span>
+                            
+                        </div>
+                    </div>
+
+                    <!-- SISI BELAKANG (DESAIN SAMA) -->
+                    <div class="flip-card-back border-2 border-electricMagenta shadow-2xl flex flex-col justify-between bg-pitchBlack">
+                        <img src="queen/ani.png" alt="Co-Leader" class="absolute inset-0 w-full h-full object-cover object-center" loading="lazy">
+
+                        <div class="relative z-10 p-5 flex justify-between items-start pointer-events-none">
+                            
+                            <span class="px-3.5 mx-auto py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-electricMagenta text-electricMagenta bg-electricMagenta/20 text-[11px] font-orbitron font-bold tracking-widest uppercase shadow-lg shadow-electricMagenta/30">
+                                CO-LEADER 
+                            </span>
+                        </div>
+
+                        <div class="relative z-10 p-6 pt-20 bg-gradient-to-t from-black via-black/85 to-transparent flex flex-col items-center text-center">
+                            <h3 class="font-orbitron font-black text-3xl text-electricMagenta tracking-wider drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+                                Anichwan
+                            </h3>
+                            <span class="font-orbitron text-xs font-semibold tracking-[0.25em] text-electricMagenta uppercase mt-1 mb-3">
+                                Queen Division
+                            </span>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <br><br><br><br><br>
+            
+            <div class="flip-card-container aspect-[3/4] reveal-on-scroll">
+                <div class="flip-card-inner">
+                    
+                    <!-- SISI DEPAN -->
+                    <div class="flip-card-front border-2 border-electricMagenta/50 shadow-2xl flex flex-col justify-between bg-pitchBlack">
+                        <img src="queen/nara-front.png" alt="Co-Leader" class="absolute inset-0 w-full h-full object-cover object-center" loading="lazy">
+
+                        <div class="relative z-10 p-5 flex justify-between items-start pointer-events-none">
+                            
+                            <span class="px-3.5 mx-auto py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-electricMagenta text-electricMagenta bg-electricMagenta/20 text-[11px] font-orbitron font-bold tracking-widest uppercase shadow-lg shadow-electricMagenta/30">
+                                DEVELOPER
+                            </span>
+                        </div>
+
+                        <div class="relative z-10 p-6 pt-20 bg-gradient-to-t from-black via-black/85 to-transparent flex flex-col items-center text-center">
+                            <h3 class="font-orbitron font-black text-3xl text-white tracking-wider  drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+                                Nara
+                            </h3>
+                            <span class="font-orbitron text-xs font-semibold tracking-[0.25em] text-electricMagenta uppercase mt-1 mb-3">
+                                Queen Division
+                            </span>
+                            
+                        </div>
+                    </div>
+
+                    <!-- SISI BELAKANG (DESAIN SAMA) -->
+                    <div class="flip-card-back border-2 border-electricMagenta shadow-2xl flex flex-col justify-between bg-pitchBlack">
+                        <img src="queen/nara.png" alt="Co-Leader" class="absolute inset-0 w-full h-full object-cover object-center" loading="lazy">
+
+                        <div class="relative z-10 p-5 flex justify-between items-start pointer-events-none">
+                            
+                            <span class="px-3.5 mx-auto py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-electricMagenta text-electricMagenta bg-electricMagenta/20 text-[11px] font-orbitron font-bold tracking-widest uppercase shadow-lg shadow-electricMagenta/30">
+                                DEVELOPER
+                            </span>
+                        </div>
+
+                        <div class="relative z-10 p-6 pt-20 bg-gradient-to-t from-black via-black/85 to-transparent flex flex-col items-center text-center">
+                            <h3 class="font-orbitron font-black text-3xl text-electricMagenta tracking-wider drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
+                                Nara
+                            </h3>
+                            <span class="font-orbitron text-xs font-semibold tracking-[0.25em] text-electricMagenta uppercase mt-1 mb-3">
+                                Queen Division
+                            </span>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: CLAN DIVISIONS (3D Tilt Cards) -->
+     <section class="relative py-32 site-container z-10" id="divisions">
+        <div class="text-center max-w-3xl mx-auto mb-20 reveal-on-scroll">
+            <h2 class="font-orbitron font-black text-4xl sm:text-5xl lg:text-6xl text-white tracking-wider mb-4">
+                SPECIALIZED <span class="text-gradient-crimson">DIVISIONS</span>
+            </h2>
+            <p class="font-rajdhani text-gray-400 text-lg sm:text-xl font-semibold">
+              
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mx-10">
+            <!-- Division 3: Shadow Vanguard -->
+            <div class="tilt-card reveal-on-scroll">
+                <div class="glass-card p-8 rounded-3xl h-full border border-violetPurple/50 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl border border-violetPurple flex items-center justify-center text-purple-400 text-2xl mb-6 shadow-lg shadow-violetPurple/70 group-hover:scale-110 transition-transform">
+                            <img src="ashigaru/ashigaru.png" alt="">
+                        </div>
+                        <h3 class="font-orbitron font-bold text-2xl text-white mb-1 group-hover:text-purple-400 transition-colors">ASHIGARU</h3>
+                        <span class="text-xs font-orbitron tracking-widest text-violetPurple uppercase block mb-4">FIRST STAGE</span>
+                        <p class="font-rajdhani text-gray-400 text-base leading-relaxed mb-6">
+                            Ashigaru is the first stage in the development of gameplay in Dueling Grounds at Suzaku. They are players who are in the process of growing and will become the future successors of Suzaku.
+                        </p>
+                    </div>
+                    <div class="border-t border-white/10 pt-5 flex flex-col gap-3">
+                        <button onclick="openDivisionModal('Shadow Vanguard', 'Counter & Defense', 'Defensive strategists who turn enemy aggression into weaknesses using counter-attacks, perfect parries, and flank shutdowns.', 'Greatsword, Heavy Shield', 'Defense Max / Counters')" 
+                                class="text-xs font-orbitron text-gray-400 hover:text-white flex items-center justify-between interactive-el">
+                            <span>DETAILS</span>
+                            <i class="fa-solid fa-info-circle"></i>
+                        </button>
+                        <a href="member.html"
+                                class="btn-cyber w-full py-2.5 font-orbitron text-xs font-bold tracking-widest text-center text-white interactive-el shadow-lg shadow-electricMagenta/20">
+                            <span>LIHAT ANGGOTA DIVISI <i class="fa-solid fa-users ml-1"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+          
+
+            <!-- Division 2: Flame Casters -->
+            <div class="tilt-card reveal-on-scroll">
+                <div class="glass-card p-8 rounded-3xl h-full border border-electricMagenta/40 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-electricMagenta/20 border border-electricMagenta flex items-center justify-center text-electricMagenta text-2xl mb-6 shadow-lg shadow-electricMagenta/70 group-hover:scale-110 transition-transform">
+                            <img src="bushi/bushi.png" alt="">
+                        </div>
+                        <h3 class="font-orbitron font-bold text-2xl text-white mb-1 group-hover:text-electricMagenta transition-colors">BUSHI</h3>
+                        <span class="text-xs font-orbitron tracking-widest text-electricMagenta uppercase block mb-4">SECOND STAGE</span>
+                        <p class="font-rajdhani text-gray-400 text-base leading-relaxed mb-6">
+                            Bushi is the second stage after passing the Ashigaru stage. They are players who have mastered basic to intermediate combat skills in Dueling Grounds.
+                        </p>
+                    </div>
+                    <div class="border-t border-white/10 pt-5 flex flex-col gap-3">
+                        <button onclick="openDivisionModal('Flame Casters', 'Mid-Range & Burst', 'Area-denial duelists who control engagement zones using high-mobility maneuvers and relentless projectile pressure.', 'Spear, Magic Tomes', 'Range / Burst Control')" 
+                                class="text-xs font-orbitron text-gray-400 hover:text-white flex items-center justify-between interactive-el">
+                            <span>DETAILS</span>
+                            <i class="fa-solid fa-info-circle"></i>
+                        </button>
+                        <a href="member.html"
+                                class="btn-cyber w-full py-2.5 font-orbitron text-xs font-bold tracking-widest text-center text-white interactive-el shadow-lg shadow-electricMagenta/20">
+                            <span>LIHAT ANGGOTA DIVISI <i class="fa-solid fa-users ml-1"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+              <!-- Division 1: Blade Masters -->
+            <div class="tilt-card reveal-on-scroll">
+                <div class="glass-card p-8 rounded-3xl h-full border border-crimsonRed/30 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl  border border-crimsonRed flex items-center justify-center text-crimsonRed text-2xl mb-6 shadow-lg shadow-crimsonRed/70 group-hover:scale-110 transition-transform">
+                            <img src="shogun/shogun.png" alt="">
+                        </div>
+                        <h3 class="font-orbitron font-bold text-2xl text-white mb-1 group-hover:text-crimsonRed transition-colors">SHOGUN</h3>
+                        <span class="text-xs font-orbitron tracking-widest text-crimsonRed uppercase block mb-4">FINAL STAGE</span>
+                        <p class="font-rajdhani text-gray-400 text-base leading-relaxed mb-6">
+                            Shogun is the third and final stage in the Suzaku rank system. They are players with high reputations in Dueling Grounds due to their abilities and serve as the core representatives of the Suzaku clan.                        </p>
+                    </div>
+                    <div class="border-t border-white/10 pt-5 flex flex-col gap-3">
+                        <button onclick="openDivisionModal('Blade Masters', 'Frontline Vanguard', 'Specialists in aggressive katana rushes, close-quarters parry breaking, and swift execution in high-stakes team battles.', 'Katana, Dual Blades', 'High Aggression / Speed')" 
+                                class="text-xs font-orbitron text-gray-400 hover:text-white flex items-center justify-between interactive-el">
+                            <span>DETAILS</span>
+                            <i class="fa-solid fa-info-circle"></i>
+                        </button>
+                        <a href="member.html"
+                                class="btn-cyber w-full py-2.5 font-orbitron text-xs font-bold tracking-widest text-center text-white interactive-el shadow-lg shadow-electricMagenta/20">
+                            <span>LIHAT ANGGOTA DIVISI <i class="fa-solid fa-users ml-1"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+             <div class="tilt-card reveal-on-scroll">
+                <div class="glass-card p-8 rounded-3xl h-full border border-electricMagenta/40 flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl  border border-electricMagenta flex items-center justify-center text-electricMagenta text-2xl mb-6 shadow-lg shadow-electricMagenta/30 group-hover:scale-110 transition-transform">
+                            <img src="queen/queen.png" alt="">
+                        </div>
+                        <h3 class="font-orbitron font-bold text-2xl text-white mb-1 group-hover:text-electricMagenta transition-colors">QUEEN</h3>
+                        <span class="text-xs font-orbitron tracking-widest text-electricMagenta uppercase block mb-4">WOMEN ONLY</span>
+                        <p class="font-rajdhani text-gray-400 text-base leading-relaxed mb-6">
+                        Specifically tailored for female members, the Queen role aims to provide a special growth space for women. Even though their skills can still be measured with Suzaku's ranks, they are recognized as female representatives within the clan.                        </p>
+                    </div>
+                    <div class="border-t border-white/10 pt-5 flex flex-col gap-3">
+                        <button onclick="openDivisionModal('Flame Casters', 'Mid-Range & Burst', 'Area-denial duelists who control engagement zones using high-mobility maneuvers and relentless projectile pressure.', 'Spear, Magic Tomes', 'Range / Burst Control')" 
+                                class="text-xs font-orbitron text-gray-400 hover:text-white flex items-center justify-between interactive-el">
+                            <span>DETAILS</span>
+                            <i class="fa-solid fa-info-circle"></i>
+                        </button>
+                        <a href="member.html"
+                                class="btn-cyber w-full py-2.5 font-orbitron text-xs font-bold tracking-widest text-center text-white interactive-el shadow-lg shadow-electricMagenta/20">
+                            <span>LIHAT ANGGOTA DIVISI <i class="fa-solid fa-users ml-1"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 4: STATS / ACHIEVEMENTS -->
+    <section class="relative py-24 site-container z-10" id="stats">
+        <div class="glass-card rounded-3xl p-10 sm:p-16 border border-crimsonRed/30 relative overflow-hidden reveal-on-scroll">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center relative z-10">
+                
+                <div class="space-y-2">
+                    <div class="font-orbitron text-4xl sm:text-6xl font-black text-crimsonRed text-glow-red counter-number" data-target="50">0</div>
+                    <div class="font-orbitron text-xs sm:text-sm font-bold tracking-widest text-gray-400 uppercase">ACTIVE MEMBERS</div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="font-orbitron text-4xl sm:text-6xl font-black text-white counter-number" data-target="10"></div>
+                    <div class="font-orbitron text-xs sm:text-sm font-bold tracking-widest text-gray-400 uppercase">DIFFERENT NATIONS</div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="font-orbitron text-4xl sm:text-6xl font-black text-electricMagenta text-glow-magenta counter-number" data-target="99">0</div>
+                    <div class="font-orbitron text-xs sm:text-sm font-bold tracking-widest text-gray-400 uppercase">MONT</div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="font-orbitron text-4xl sm:text-6xl font-black text-purple-400 counter-number" data-target="15">0</div>
+                    <div class="font-orbitron text-xs sm:text-sm font-bold tracking-widest text-gray-400 uppercase">TOURNAMENT TITLES</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- FLOATING FIXED FOOTER (Mengikuti Layar di Bagian Bawah) -->
+   <!-- SECTION: FOOTER (COPYRIGHT & TIKTOK) -->
+    <footer class="relative z-10 border-t border-white/10 bg-pitchBlack py-8 px-6 text-center font-rajdhani">
+        <div class="site-container flex flex-col sm:flex-row items-center justify-between gap-4">
+            
+            <!-- Copyright Text -->
+            <p class="text-xs text-gray-400">
+                © 2026 Suzaku Clan | Roblox Dueling Grounds Community. All rights reserved.
+            </p>
+
+            <!-- Social Link: TikTok Only -->
+            <div class="flex items-center">
+                <a href="https://www.tiktok.com/@suzaku.clan?_r=1&_t=ZS-9AyyuCW6LQO" target="_blank" rel="noopener noreferrer" 
+                   class="w-10 h-10 rounded-xl glass-card border border-electricMagenta/40 flex items-center justify-center text-gray-300 hover:text-crimsonRed hover:border-crimsonRed transition-all duration-300 shadow-lg shadow-crimsonRed/10"
+                   aria-label="TikTok Suzaku Clan">
+                    <i class="fa-brands fa-tiktok text-base"></i>
+                </a>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT -->
+    <script>
+        let isAutoScrolling = false;
+let animId = null;
+const scrollBtn = document.getElementById('scrollBtn');
+
+function step() {
+    if (!isAutoScrolling) return;
+
+    // Geser layar ke bawah sebesar 1.5 piksel (ubah angka untuk mengatur kecepatan)
+    window.scrollBy(0, 3);
+
+    // Cek apakah sudah sampai paling bawah halaman
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2) {
+        stopAutoScroll();
+        return;
+    }
+
+    animId = requestAnimationFrame(step);
+}
+
+function startAutoScroll(e) {
+    e.preventDefault(); // Mencegah loncatan instan bawaan tag <a> ke #about
+    if (isAutoScrolling) {
+        stopAutoScroll();
+    } else {
+        isAutoScrolling = true;
+        animId = requestAnimationFrame(step);
+        // Opsional: Ubah teks/ikon saat aktif jika diinginkan
+    }
+}
+
+function stopAutoScroll() {
+    if (!isAutoScrolling) return;
+    isAutoScrolling = false;
+    cancelAnimationFrame(animId);
+}
+
+// Event ketika tombol diklik
+scrollBtn.addEventListener('click', startAutoScroll);
+
+// DETEKSI INTERUPSI PENGGUNA
+// Jika pengguna melakukan scroll manual, klik, atau interupsi lain, auto-scroll berhenti seketika
+const userInteractions = ['mousedown', 'wheel', 'keydown', 'touchstart'];
+
+userInteractions.forEach(event => {
+    window.addEventListener(event, () => {
+        if (isAutoScrolling) {
+            stopAutoScroll();
+        }
+    }, { passive: true });
+});
+       
+        /* -------------------------------------------------------------
+           CUSTOM NEON CURSOR MOVEMENT
+        ------------------------------------------------------------- */
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+        let mouseX = 0, mouseY = 0;
+        let ringX = 0, ringY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            if (cursorDot) {
+                cursorDot.style.left = `${mouseX}px`;
+                cursorDot.style.top = `${mouseY}px`;
+            }
+        });
+
+        function animateCursor() {
+            ringX += (mouseX - ringX) * 0.15;
+            ringY += (mouseY - ringY) * 0.15;
+            if (cursorRing) {
+                cursorRing.style.left = `${ringX}px`;
+                cursorRing.style.top = `${ringY}px`;
+            }
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        /* -------------------------------------------------------------
+           SMOOTH SCROLL PARALLAX ENGINE
+        ------------------------------------------------------------- */
+        const parallaxElements = document.querySelectorAll('.scroll-parallax');
+
+        function updateScrollParallax() {
+            const scrollY = window.scrollY;
+            parallaxElements.forEach(el => {
+                const speed = parseFloat(el.getAttribute('data-speed')) || 0.1;
+                const translateY = scrollY * speed;
+                el.style.transform = `translate3d(0, ${translateY}px, 0)`;
+            });
+        }
+        window.addEventListener('scroll', updateScrollParallax, { passive: true });
+
+        /* -------------------------------------------------------------
+           INTERSECTION OBSERVER FOR SCROLL REVEALS
+        ------------------------------------------------------------- */
+        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        /* -------------------------------------------------------------
+           ANIMATED NUMBER COUNTERS
+        ------------------------------------------------------------- */
+        const counterElements = document.querySelectorAll('.counter-number');
+        let animatedCounters = false;
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !animatedCounters) {
+                    animatedCounters = true;
+                    counterElements.forEach(counter => {
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        let count = 0;
+                        const duration = 2000;
+                        const timer = setInterval(() => {
+                            count += Math.ceil(target / 50);
+                            if (count >= target) {
+                                counter.innerText = target + (target === 98 ? '%' : '+');
+                                clearInterval(timer);
+                            } else {
+                                counter.innerText = count;
+                            }
+                        }, 30);
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsSection = document.getElementById('stats');
+        if (statsSection) counterObserver.observe(statsSection);
+
+        /* -------------------------------------------------------------
+           3D TILT EFFECT ON CARDS
+        ------------------------------------------------------------- */
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 12;
+                const rotateY = (centerX - x) / 12;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            });
+        });
+
+        /* -------------------------------------------------------------
+           BACKGROUND PARTICLES (EMBER CANVAS)
+        ------------------------------------------------------------- */
+        const canvas = document.getElementById('emberCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Ember {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 50;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.opacity = Math.random() * 0.7 + 0.3;
+                const colors = ['#FF2A5F', '#D41C8C', '#8C22E6'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                this.y -= this.speedY;
+                this.opacity -= 0.003;
+                if (this.y < -10 || this.opacity <= 0) this.reset();
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        const embers = Array.from({ length: 50 }, () => new Ember());
+        function animateEmbers() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            embers.forEach(ember => { ember.update(); ember.draw(); });
+            requestAnimationFrame(animateEmbers);
+        }
+        animateEmbers();
+
+        /* -------------------------------------------------------------
+           MODAL POPUP & RECRUITMENT WORKFLOW
+        ------------------------------------------------------------- */
+    
+        
+    </script>
+</body>
+</html>

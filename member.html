@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="logo-nobg.png">
+    <title>SUZAKU 朱雀 | Clan Division Roster</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Noto+Serif+JP:wght@700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pitchBlack: '#0A060D',
+                        crimsonRed: '#FF2A5F',
+                        electricMagenta: '#D41C8C',
+                        violetPurple: '#8C22E6',
+                        darkViolet: '#1D082A',
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif'],
+                        kanji: ['Noto Serif JP', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Dynamic Scaling for All Displays (including 32" Monitors) */
+        :root { font-size: 16px; }
+        @media (min-width: 1920px) { :root { font-size: 18px; } }
+        @media (min-width: 2560px) { :root { font-size: 22px; } }
+
+        /* Hide default cursor on desktop */
+        @media (min-width: 768px) {
+            body, button, a, input, select { cursor: none !important; }
+        }
+
+        /* Custom Neon Cursor */
+        .custom-cursor {
+            pointer-events: none;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 9999;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        #cursor-dot {
+            width: 8px; height: 8px;
+            background: #FF2A5F;
+            box-shadow: 0 0 12px #FF2A5F;
+        }
+        #cursor-ring {
+            width: 36px; height: 36px;
+            border: 1.5px solid rgba(212, 28, 140, 0.6);
+            box-shadow: 0 0 15px rgba(212, 28, 140, 0.3);
+            transition: transform 0.15s ease-out, width 0.2s, height 0.2s;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0A060D; }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #FF2A5F, #8C22E6);
+            border-radius: 4px;
+        }
+        
+        body {
+            background-color: #0A060D;
+            color: #F1F5F9;
+            overflow-x: hidden;
+            font-family: 'Rajdhani', sans-serif;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Global Adaptive Container */
+        .site-container {
+            width: 92%;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .text-gradient-crimson {
+            background: linear-gradient(135deg, #FF2A5F 0%, #D41C8C 50%, #8C22E6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(18, 9, 26, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 42, 95, 0.22);
+            box-shadow: 0 10px 35px 0 rgba(0, 0, 0, 0.8);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(212, 28, 140, 0.65);
+            box-shadow: 0 12px 40px 0 rgba(255, 42, 95, 0.3);
+        }
+
+        /* Responsive Auto-Fit Grid for Roster Cards */
+        .responsive-roster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-crimsonRed selection:text-white">
+
+    <!-- Custom Neon Cursors -->
+    <div id="cursor-dot" class="custom-cursor hidden md:block"></div>
+    <div id="cursor-ring" class="custom-cursor hidden md:block"></div>
+
+    <!-- Embers Canvas Background -->
+    <canvas id="emberCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 px-4 sm:px-8 py-4" id="navbar">
+        <div class="site-container glass-card rounded-2xl px-6 py-3 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="logoonly.png" alt="" class="w-10 h-10 rounded-xl bg-gradient-to-br from-crimsonRed via-electricMagenta to-violetPurple flex items-center justify-center font-kanji text-xl font-bold text-white shadow-lg shadow-crimsonRed/40 group-hover:scale-105 transition-transform">
+                <div class="flex flex-col">
+                    <span class="font-orbitron text-xl font-black tracking-widest text-white group-hover:text-crimsonRed transition-colors">SUZAKU</span>
+                    <span class="text-[9px] font-orbitron tracking-[0.35em] text-electricMagenta">DUELING GROUNDS</span>
+                </div>
+            </a>
+
+            <a href="index.html" class="glass-card px-5 py-2.5 rounded-xl font-orbitron text-xs font-bold text-gray-300 hover:text-white hover:border-crimsonRed transition-all inline-flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left text-crimsonRed"></i> BERANDA
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN ROSTER SECTION -->
+    <main class="relative min-h-screen pt-32 pb-24 site-container z-10">
+        
+        <!-- Top Controls & Navigation -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div>
+                <h1 class="font-orbitron font-black text-4xl sm:text-5xl text-white tracking-wider">
+                    DIVISION <span class="text-gradient-crimson" id="rosterTitle">ROSTER</span>
+                </h1>
+                <p class="font-rajdhani text-gray-400 text-base sm:text-lg font-semibold mt-1">
+                   List of official Suzaku Clan members, categorized by division and Dueling Grounds statistics.
+                </p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative w-full md:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="text" id="rosterSearchInput" oninput="filterRoster()" placeholder="Cari nama atau rank..." 
+                       class="w-full bg-pitchBlack/90 border border-white/20 rounded-xl pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-crimsonRed transition-colors text-sm font-rajdhani">
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap gap-3 mb-10 font-orbitron text-xs font-bold">
+            <button onclick="setRosterTab('ALL')" id="tab-ALL" class="roster-tab px-5 py-2.5 rounded-xl glass-card border-crimsonRed text-white">ALL DIVISIONS</button>
+            <button onclick="setRosterTab('Shogun')" id="tab-Shogun" class="roster-tab px-5 py-2.5 rounded-xl glass-card text-gray-400 hover:text-white border-white/10">SHOGUN</button>
+            <button onclick="setRosterTab('Bushi')" id="tab-Bushi" class="roster-tab px-5 py-2.5 rounded-xl glass-card text-gray-400 hover:text-white border-white/10">BUSHI</button>
+            <button onclick="setRosterTab('Ashigaru')" id="tab-Ashigaru" class="roster-tab px-5 py-2.5 rounded-xl glass-card text-gray-400 hover:text-white border-white/10">ASHIGARU</button>
+            <button onclick="setRosterTab('Queen')" id="tab-Queen" class="roster-tab px-5 py-2.5 rounded-xl glass-card text-gray-400 hover:text-white border-white/10">QUEEN</button>
+        </div>
+
+        <!-- Roster Member Cards Grid -->
+        <div id="rosterGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 w-full">
+    <!-- Kartu anggota akan dimuat di sini -->
+</div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer  class="relative z-10 border-t border-white/10 bg-pitchBlack py-10 px-6 text-center font-rajdhani text-xs text-gray-500">
+        <p>© 2026 Suzaku Clan | Roblox Dueling Grounds Community. All rights reserved.</p>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT -->
+    <script>
+        const memberData = [
+            //DIVISI SHOGUN
+            { 
+                name: "ShinSora",  
+                division: "Shogun", 
+                weapon: "Katana", 
+                avatar: "shogun/sora.png",
+               
+            },
+            { 
+                name: "SimonNyet", 
+                division: "Shogun", 
+                weapon: "Katana", 
+                avatar: "shogun/simon2.png",
+            },
+            { 
+                name: "Rilan", 
+                division: "Shogun", 
+                weapon: "Infernal Tome & Spear", 
+                avatar: "shogun/rilann2.png",
+             
+            },
+            { 
+                name: "Hoss", 
+                division: "Shogun", 
+                weapon: "Katana", 
+                avatar: "shogun/hoss.png",
+            },
+             { 
+                name: "Haze", 
+                division: "Shogun", 
+                weapon: "Katana", 
+                avatar: "shogun/haze.png",
+            },
+            
+            { 
+                name: "Hinai", 
+                division: "Shogun", 
+                weapon: "Katana", 
+                avatar: "shogun/hinai.png",
+            },
+            { 
+                name: "Grigori", 
+                division: "Shogun", 
+                weapon: "Katana", 
+                avatar: "shogun/sevan.png",
+            },
+        
+            { 
+                name: "Probeast", 
+                division: "Shogun", 
+                weapon: "Katana", 
+                avatar: "shogun/probeast.png",
+            },
+            //DISVI BUSHI
+            { 
+                name: "Shiro", 
+                division: "Bushi", 
+                weapon: "Katana", 
+                avatar: "bushi/shiro.png",
+            },
+            { 
+                name: "Kuro", 
+                division: "Bushi", 
+                weapon: "Katana", 
+                avatar: "bushi/kuro.png",
+            },
+            { 
+                name: "Sopototot", 
+                division: "Bushi", 
+                weapon: "Katana", 
+                avatar: "bushi/sopototot.png",
+            },
+            { 
+                name: "Dopu", 
+                division: "Bushi", 
+                weapon: "Katana", 
+                avatar: "bushi/dopu.png",
+            },
+            { 
+                name: "Aisek", 
+                division: "Bushi", 
+                weapon: "Katana", 
+                avatar: "bushi/aisek.png",
+            },
+            //DIVISI ASHIGARU
+            { 
+                name: "Awe", 
+                division: "Ashigaru", 
+                weapon: "Katana", 
+                avatar: "ashigaru/awe.png",
+            },
+            { 
+                name: "Kori", 
+                division: "Ashigaru", 
+                weapon: "Katana", 
+                avatar: "ashigaru/kori.png",
+            },
+            { 
+                name: "Mara", 
+                division: "Ashigaru", 
+                weapon: "Katana", 
+                avatar: "ashigaru/mara.png",
+            },
+            { 
+                name: "Rexx", 
+                division: "Ashigaru", 
+                weapon: "Katana", 
+                avatar: "ashigaru/rexx.png",
+            },
+            { 
+                name: "Sekai", 
+                division: "Ashigaru", 
+                weapon: "Katana", 
+                avatar: "ashigaru/sekai.png",
+            },
+            { 
+                name: "Yukkie", 
+                division: "Ashigaru", 
+                weapon: "Katana", 
+                avatar: "ashigaru/yukkie.png",
+            },
+              { 
+                name: "Kibow", 
+                division: "Ashigaru", 
+                weapon: "Katana", 
+                avatar: "ashigaru/kibow.png",
+            },
+            { 
+                name: "Opet", 
+                division: "Ashigaru", 
+                weapon: "Katana", 
+                avatar: "ashigaru/opet.png",
+            },
+            //QUEEN DIVISION
+            
+            { 
+                name: "Anichwan", 
+                division: "Queen", 
+                weapon: "Katana", 
+                avatar: "queen/ani.png",
+            },
+             { 
+                name: "Nara", 
+                division: "Queen", 
+                weapon: "Katana", 
+                avatar: "queen/nara-front.png",
+            },
+            { 
+                name: "Shanara", 
+                division: "Queen", 
+                weapon: "Katana", 
+                avatar: "queen/shanara.png",
+            },
+             { 
+                name: "Sunflower", 
+                division: "Queen", 
+                weapon: "Dagger", 
+                avatar: "queen/sun.png",
+            },
+            { 
+                name: "Awoobinbin", 
+                division: "Queen", 
+                weapon: "Katana", 
+                avatar: "queen/binbin.png",
+            },
+            { 
+                name: "Aishy", 
+                division: "Queen", 
+                weapon: "Katana", 
+                avatar: "queen/aish.png",
+            },
+            { 
+                name: "Ruyaa", 
+                division: "Queen", 
+                weapon: "Dagger", 
+                avatar: "queen/ruya.png",
+            },
+          
+             { 
+                name: "Yura", 
+                division: "Queen", 
+                weapon: "Katana", 
+                avatar: "queen/yura.png",
+            },
+            { 
+                name: "Andinz", 
+                division: "Queen", 
+                weapon: "Katana", 
+                avatar: "queen/andin.png",
+            },
+            
+        ];
+
+        let currentActiveTab = 'ALL';
+
+        // Read URL query string (e.g. roster.html?division=Blade%20Masters)
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const divParam = urlParams.get('division');
+            if (divParam) {
+                setRosterTab(divParam);
+            } else {
+                setRosterTab('ALL');
+            }
+        });
+
+        function setRosterTab(divName) {
+            currentActiveTab = divName;
+            document.querySelectorAll('.roster-tab').forEach(tab => {
+                tab.classList.remove('border-crimsonRed', 'text-white');
+                tab.classList.add('border-white/10', 'text-gray-400');
+            });
+
+            const activeTabBtn = document.getElementById(`tab-${divName}`);
+            if (activeTabBtn) {
+                activeTabBtn.classList.remove('border-white/10', 'text-gray-400');
+                activeTabBtn.classList.add('border-crimsonRed', 'text-white');
+            }
+
+            document.getElementById('rosterTitle').innerText = divName === 'ALL' ? 'ROSTER' : divName.toUpperCase();
+            renderRosterCards();
+        }
+
+        function filterRoster() {
+            renderRosterCards();
+        }
+
+        function renderRosterCards() {
+            const query = document.getElementById('rosterSearchInput').value.toLowerCase();
+            const grid = document.getElementById('rosterGrid');
+            grid.innerHTML = '';
+
+            const filtered = memberData.filter(m => {
+                const matchesTab = currentActiveTab === 'ALL' || m.division === currentActiveTab;
+                const matchesSearch = m.name.toLowerCase().includes(query) || m.rank.toLowerCase().includes(query) || m.division.toLowerCase().includes(query);
+                return matchesTab && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 font-orbitron text-sm">TIDAK ADA ANGGOTA DITEMUKAN</div>`;
+                return;
+            }
+
+            filtered.forEach(m => {
+                let statusColor = "bg-emerald-500 shadow-emerald-500/50";
+                
+
+                let badgeColor = "border-crimsonRed text-crimsonRed bg-crimsonRed/20";
+                if (m.division === "Shogun") badgeColor = "border-electricMagenta text-electricMagenta bg-electricMagenta/20";
+                if (m.division === "Queen") badgeColor = "border-violetPurple text-purple-400 bg-violetPurple/20";
+
+                const card = document.createElement('div');
+                card.className = "group relative rounded-3xl overflow-hidden aspect-[3/4.2] border-2 border-white/10 hover:border-crimsonRed transition-all duration-500 shadow-2xl flex flex-col justify-between cursor-pointer";
+                
+                card.innerHTML = `
+                
+                    <img src="${m.avatar}" alt="${m.name}" class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out" loading="lazy">
+
+                        <span class="px-3 py-1 ">
+                          
+                        </span>
+                    </div>
+
+                    <div class="relative z-10 p-6 pt-16 bg-gradient-to-t from-black via-black/50 to-transparent flex flex-col items-center text-center group-hover:from-pitchBlack group-hover:via-black/90 transition-all duration-300">
+                        <h3 class="font-orbitron font-black text-1xl sm:text-3xl text-white tracking-wider drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] group-hover:text-crimsonRed transition-colors">
+                            ${m.name}
+                        </h3>
+
+                        <span class="font-orbitron text-xs font-semibold tracking-[0.25em] text-gray-300 uppercase mt-1 drop-shadow-md">
+                            ${m.division}
+                        </span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        /* Custom Neon Cursor Movement */
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+        let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            if (cursorDot) { cursorDot.style.left = `${mouseX}px`; cursorDot.style.top = `${mouseY}px`; }
+        });
+
+        function animateCursor() {
+            ringX += (mouseX - ringX) * 0.15;
+            ringY += (mouseY - ringY) * 0.15;
+            if (cursorRing) { cursorRing.style.left = `${ringX}px`; cursorRing.style.top = `${ringY}px`; }
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        /* Ember Canvas Background */
+        const canvas = document.getElementById('emberCanvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Ember {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 50;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.opacity = Math.random() * 0.7 + 0.3;
+                const colors = ['#FF2A5F', '#D41C8C', '#8C22E6'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                this.y -= this.speedY; this.opacity -= 0.003;
+                if (this.y < -10 || this.opacity <= 0) this.reset();
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.globalAlpha = this.opacity; ctx.fill(); ctx.globalAlpha = 1.0;
+            }
+        }
+        const embers = Array.from({ length: 40 }, () => new Ember());
+        function animateEmbers() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            embers.forEach(e => { e.update(); e.draw(); });
+            requestAnimationFrame(animateEmbers);
+        }
+        animateEmbers();
+    </script>
+</body>
+</html>
