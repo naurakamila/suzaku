@@ -308,10 +308,9 @@
                     <hr style="color: #F1F5F9;">
                     <div class="text-center">
                         
-                        <video width="940" height="660" controls controlsList="nodownload" oncontextmenu="return false;">
+                        <video controls controlsList="nodownload" oncontextmenu="return false;">
                             <source src="Draft1_Suzaku.mp4" type="video/mp4">
                         </video>
-                        
                         <hr>
                     </div>
                 </div>
@@ -751,6 +750,18 @@
 
     <!-- INTERACTIVE JAVASCRIPT -->
     <script>
+       
+// Mencegah klik kanan di seluruh halaman
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Mencegah kombinasi tombol shortcut untuk Inspect / Save (Ctrl+U, Ctrl+Shift+I, dll)
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'i')) {
+        e.preventDefault();
+        alert("Aksi ini dilarang!");
+    }
+});
+
         let isAutoScrolling = false;
 let animId = null;
 const scrollBtn = document.getElementById('scrollBtn');
@@ -801,19 +812,7 @@ userInteractions.forEach(event => {
         }
     }, { passive: true });
 });
-
-        <script>
-// Mencegah klik kanan di seluruh halaman
-document.addEventListener('contextmenu', event => event.preventDefault());
-
-// Mencegah kombinasi tombol shortcut untuk Inspect / Save (Ctrl+U, Ctrl+Shift+I, dll)
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'i')) {
-        e.preventDefault();
-        alert("Aksi ini dilarang!");
-    }
-});
-</script>
+       
         /* -------------------------------------------------------------
            CUSTOM NEON CURSOR MOVEMENT
         ------------------------------------------------------------- */
